@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 V=$(basename "$1" .dng)
 if [[ ${V} =~ ^([a-z_0-9]*)([0-9]{4}) ]]; then
  NUM=${BASH_REMATCH[2]}
