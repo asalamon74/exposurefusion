@@ -23,6 +23,7 @@ greenvalue=${3:-}
 colortemp=${2-5500}
 
 echo Using color temperature "${colortemp}"
+greenparam=""
 [[ ! -z ${greenvalue} ]] && greenparam="--green ${greenvalue}" && echo Using green "${greenvalue}"
 parallel --no-notice ufraw-batch --temperature="${colortemp}" "${greenparam}" --out-type=png --out-path ${TMPDIR} ::: "${PREFIX}${x1}.dng" "${PREFIX}${x2}.dng" "${PREFIX}${x3}.dng"
 
