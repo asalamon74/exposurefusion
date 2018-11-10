@@ -4,6 +4,14 @@ set -euo pipefail
 TMPROOTDIR="."
 TMPDIR="${TMPROOTDIR}/EXPOSUREFUSION.$$"
 
+cleanup() {
+  rv=$?
+  rm -rf $TMPDIR
+  exit $rv
+}
+
+trap cleanup INT TERM EXIT
+
 usage() {
     echo "Usage:"
     echo "  $(basename "$0") first_file.dng [colortemp [greenvalue]]"
@@ -48,4 +56,3 @@ exiftool -TagsFromFile "${TMPDIR}/${PREFIX}${x1}.png" -all:all "${TMPDIR}/${efna
 exiftool '-DateTimeOriginal>FileModifyDate' "${TMPDIR}/${efname}.jpg"
 exiftool -P -keywords+="exposure fusion" "${TMPDIR}/${efname}.jpg"
 mv "${TMPDIR}/${efname}.jpg" .
-rm -rf "${TMPDIR}"
