@@ -4,13 +4,27 @@ set -euo pipefail
 TMPROOTDIR="."
 TMPDIR="${TMPROOTDIR}/EXPOSUREFUSION.$$"
 
-V=$(basename "$1" .dng)
+usage() {
+    echo "Usage:"
+    echo "  $(basename "$0") first_file.dng [colortemp [greenvalue]]"
+}
+
+error() {
+    echo "$1"
+    usage
+    exit 1
+}
+
+first_file=${1:-}
+
+[[ -z "$first_file" ]] && error "NO INPUT FILE SPECIFIED"
+
+V=$(basename "$first_file" .dng)
 if [[ ${V} =~ ^([a-z_0-9]*)([0-9]{4}) ]]; then
  NUM=${BASH_REMATCH[2]}
  PREFIX=${BASH_REMATCH[1]}
 else
- echo Invalid filename
- exit 1
+ error "INVALID FILENAME: $first_file"
 fi
 
 mkdir "$TMPDIR" || error "CANNOT CREATE TEMPORARY FILE DIRECTORY"
