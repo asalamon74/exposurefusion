@@ -23,9 +23,19 @@ error() {
     exit 1
 }
 
+command_check() {
+    [[ -x "$(command -v "$1")" ]] || (echo "ERROR: $1 is not installed" && exit 2)
+}
+
 first_file=${1:-}
 colortemp=${2-5500}
 greenvalue=${3:-}
+
+command_check "parallel"
+command_check "align_image_stack"
+command_check "enfuse"
+command_check "convert"
+command_check "exiftool"
 
 [[ -z "$first_file" ]] && error "NO INPUT FILE SPECIFIED"
 
