@@ -16,11 +16,13 @@ error() {
 }
 
 first_file=${1:-}
+colortemp=${2-5500}
+greenvalue=${3:-}
 
 [[ -z "$first_file" ]] && error "NO INPUT FILE SPECIFIED"
 
-V=$(basename "$first_file" .dng)
-if [[ ${V} =~ ^([a-z_0-9]*)([0-9]{4}) ]]; then
+input_file_base=$(basename "$first_file" .dng)
+if [[ ${input_file_base} =~ ^([a-z_0-9]*)([0-9]{4}) ]]; then
  NUM=${BASH_REMATCH[2]}
  PREFIX=${BASH_REMATCH[1]}
 else
@@ -33,8 +35,6 @@ x1=$(printf '%04d' $(( NUM )));
 x2=$(printf '%04d' $(( NUM+1 )));
 x3=$(printf '%04d' $(( NUM+2 )));
 efname=${PREFIX}${x1}_ef
-greenvalue=${3:-}
-colortemp=${2-5500}
 
 echo Using color temperature "${colortemp}"
 greenparam=""
