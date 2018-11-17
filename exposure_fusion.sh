@@ -31,6 +31,7 @@ first_file=${1:-}
 colortemp=${2-5500}
 greenvalue=${3:-}
 
+command_check "ufraw-batch"
 command_check "parallel"
 command_check "align_image_stack"
 command_check "enfuse"
