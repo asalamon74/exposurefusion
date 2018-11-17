@@ -7,8 +7,13 @@ addons:
   apt:
     sources:
     - debian-sid    # Grab shellcheck from the Debian repo (o_O)
-    packages:
-    - shellcheck
+#    packages:
+#     - shellcheck
+
+before-script:
+  - "sudo apt-get install cabal-install"
+  - "cabal update"
+  - "cabal install shellcheck"
 
 script:
  - shellcheck exposure_fusion.sh
