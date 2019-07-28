@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/asalamon74/exposure_fusion.svg?branch=master)](https://travis-ci.org/asalamon74/exposure_fusion)
+[![Build Status](https://travis-ci.org/asalamon74/exposurefusion.svg?branch=master)](https://travis-ci.org/asalamon74/exposurefusion)
 
 # Exposure Fusion
 
-Shell script for [exposure fusion](https://photo.stackexchange.com/a/20897/507). 
+Shell script for [exposure fusion](https://photo.stackexchange.com/a/20897/507).
 
 ## Requirements
 
