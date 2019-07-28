@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 TMPROOTDIR="."
@@ -57,7 +57,7 @@ efname=${PREFIX}${x1}_ef
 
 echo Using color temperature "${colortemp}"
 greenparam=""
-[[ ! -z ${greenvalue} ]] && greenparam="--green ${greenvalue}" && echo Using green "${greenvalue}"
+[[ -n ${greenvalue} ]] && greenparam="--green ${greenvalue}" && echo Using green "${greenvalue}"
 parallel --no-notice ufraw-batch --temperature="${colortemp}" "${greenparam}" --out-type=png --out-path ${TMPDIR} ::: "${PREFIX}${x1}.dng" "${PREFIX}${x2}.dng" "${PREFIX}${x3}.dng"
 
 align_image_stack -s 3 -a "${TMPDIR}/ais_${PREFIX}${x1}_" "${TMPDIR}/${PREFIX}"{"${x1}","${x2}","${x3}"}.png
