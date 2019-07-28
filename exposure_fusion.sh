@@ -14,7 +14,11 @@ trap cleanup INT TERM EXIT
 
 usage() {
     echo "Usage:"
-    echo "  $(basename "$0") first_file.dng [colortemp [greenvalue]]"
+    echo "  $(basename "$0") [options] first_file.dng"
+    echo ""
+    echo "  -h, --help                  display this help"
+    echo "  -t, --temperature           color temperature"
+    echo "  -g, --green                 green value"
 }
 
 error() {
@@ -27,9 +31,35 @@ command_check() {
     [[ -x "$(command -v "$1")" ]] || (echo "ERROR: $1 is not installed" && exit 2)
 }
 
-first_file=${1:-}
-colortemp=${2-5500}
-greenvalue=${3:-}
+colortemp=5500
+greenvalue=
+first_file=
+
+for i in "$@"
+do
+case $i in
+    -h|--help)
+    usage
+    exit
+    ;;
+    -t=*|--temperature=*)
+    colortemp="${i#*=}"
+    shift # past argument=value
+    ;;
+    --green=*)
+    greenvalue="${i#*=}"
+    shift # past argument=value
+    ;;
+    -*)
+    echo "Unknown option $1"
+    usage
+    exit 1
+    ;;
+    *)
+    [[ -z "$first_file" ]] && first_file=${i} || (echo "Extra argument ${i}" && usage && exit 1)
+    ;;
+esac
+done
 
 command_check "ufraw-batch"
 command_check "parallel"

@@ -16,12 +16,20 @@ Shell script for [exposure fusion](https://photo.stackexchange.com/a/20897/507).
 ## Usage
 
 ```
-exposure_fusion.sh first_file.dng [colortemp [greenvalue]]
+exposure_fusion.sh [options] first_file.dng
+
+Options:
+  -h, --help                  display this help
+  -t, --temperature           color temperature
+  -g, --green                 green value
 ```
 
-* first_file.dng: The first RAW input file.
+* first_file.dng: The first RAW input file. The script will use the number
+  in the file name to find the three input files. For instance if the
+  first file is `aaa_1234.dng`, the script will use the following
+  files: `aaa_1234.dng`, `aaa_1235.dng`, and `aaa_1236.dng`.
 
-* colortemp: Color temperature to use for RAW conversion. Default: 5500
+* color temperature: Color temperature to use for RAW conversion. Default: 5500
 
-* greenvalue: Gree value to use for RAW conversion.
+* green value: Green value to use for RAW conversion.
 
