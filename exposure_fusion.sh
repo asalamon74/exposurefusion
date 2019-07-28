@@ -5,9 +5,9 @@ TMPROOTDIR="."
 TMPDIR="${TMPROOTDIR}/EXPOSUREFUSION.$$"
 
 cleanup() {
-  rv=$?
-  rm -rf $TMPDIR
-  exit $rv
+    rv=$?
+    rm -rf $TMPDIR
+    exit $rv
 }
 
 trap cleanup INT TERM EXIT
@@ -42,10 +42,10 @@ command_check "exiftool"
 
 input_file_base=$(basename "$first_file" .dng)
 if [[ ${input_file_base} =~ ^([a-z_0-9]*)([0-9]{4}) ]]; then
- NUM=${BASH_REMATCH[2]}
- PREFIX=${BASH_REMATCH[1]}
+    NUM=${BASH_REMATCH[2]}
+    PREFIX=${BASH_REMATCH[1]}
 else
- error "INVALID FILENAME: $first_file"
+    error "INVALID FILENAME: $first_file"
 fi
 
 mkdir "$TMPDIR" || error "CANNOT CREATE TEMPORARY FILE DIRECTORY"
