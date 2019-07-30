@@ -19,6 +19,7 @@ usage() {
     echo "  -h, --help                  display this help"
     echo "  -t, --temperature           color temperature"
     echo "  -g, --green                 green value"
+    echo "  -n, --num                   number of images to process (default: 3)"
 }
 
 error() {
@@ -34,6 +35,7 @@ command_check() {
 colortemp=5500
 greenvalue=
 first_file=
+num=3
 
 for i in "$@"
 do
@@ -50,13 +52,23 @@ case $i in
     greenvalue="${i#*=}"
     shift # past argument=value
     ;;
+    -n=*|--num=*)
+    num="${i#*=}"
+    shift # past argument=value
+    ;;
     -*)
     echo "Unknown option $1"
     usage
     exit 1
     ;;
     *)
-    [[ -z "$first_file" ]] && first_file=${i} || (echo "Extra argument ${i}" && usage && exit 1)
+    if [[ -z "$first_file" ]]; then
+        first_file=${i}
+    else
+        echo "Extra argument ${i}"
+        usage
+        exit 1
+    fi
     ;;
 esac
 done
@@ -80,20 +92,25 @@ fi
 
 mkdir "$TMPDIR" || error "CANNOT CREATE TEMPORARY FILE DIRECTORY"
 
-x1=$(printf '%04d' $(( NUM )));
-x2=$(printf '%04d' $(( NUM+1 )));
-x3=$(printf '%04d' $(( NUM+2 )));
-efname=${PREFIX}${x1}_ef
+declare -a x
+declare -a filenames
+
+for i in $(seq 0 $((num-1))); do
+    x[$i]=$(printf '%04d' $(( NUM + i )));
+    filenames[$i]="${PREFIX}${x[$i]}.dng"
+done
+
+efname=${PREFIX}${x[0]}_ef
 
 echo Using color temperature "${colortemp}"
 greenparam=""
 [[ -n ${greenvalue} ]] && greenparam="--green ${greenvalue}" && echo Using green "${greenvalue}"
-parallel --no-notice ufraw-batch --temperature="${colortemp}" "${greenparam}" --out-type=png --out-path ${TMPDIR} ::: "${PREFIX}${x1}.dng" "${PREFIX}${x2}.dng" "${PREFIX}${x3}.dng"
+parallel --no-notice ufraw-batch --temperature="${colortemp}" "${greenparam}" --out-type=png --out-path ${TMPDIR} ::: "${filenames[@]}"
 
-align_image_stack -s 3 -a "${TMPDIR}/ais_${PREFIX}${x1}_" "${TMPDIR}/${PREFIX}"{"${x1}","${x2}","${x3}"}.png
-enfuse -o "${TMPDIR}/${efname}.tif" "${TMPDIR}/ais_${PREFIX}${x1}"_*.tif
+align_image_stack -s 3 -a "${TMPDIR}/ais_${PREFIX}${x[0]}_" "${TMPDIR}/${PREFIX}"*.png
+enfuse -o "${TMPDIR}/${efname}.tif" "${TMPDIR}/ais_${PREFIX}${x[0]}"_*.tif
 convert "${TMPDIR}/${efname}".{tif,jpg}
-exiftool -TagsFromFile "${TMPDIR}/${PREFIX}${x1}.png" -all:all "${TMPDIR}/${efname}.jpg"
+exiftool -TagsFromFile "${TMPDIR}/${PREFIX}${x[0]}.png" -all:all "${TMPDIR}/${efname}.jpg"
 exiftool '-DateTimeOriginal>FileModifyDate' "${TMPDIR}/${efname}.jpg"
 exiftool -P -keywords+="exposure fusion" "${TMPDIR}/${efname}.jpg"
 mv "${TMPDIR}/${efname}.jpg" .
