@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/asalamon74/exposurefusion.svg?branch=master)](https://travis-ci.org/asalamon74/exposurefusion)
+[![Build Status](https://travis-ci.com/asalamon74/exposurefusion.svg?branch=master)](https://travis-ci.com/asalamon74/exposurefusion)
 
 # Exposure Fusion
 
